@@ -1,0 +1,28 @@
+{
+  "name": "Muji Alunika",
+  "title": "Fullstack Developer",
+  "bio": "Passionate fullstack developer building modern web applications. Love exploring AI, open-source, and creative coding.",
+  "avatar": "/avatar.jpg",
+  "stats": {
+    "projects": 12,
+    "experience": "5+ years",
+    "techStacks": 15
+  },
+  "socials": [
+    {
+      "platform": "github",
+      "url": "https://github.com/mujay",
+      "label": "GitHub"
+    },
+    {
+      "platform": "linkedin",
+      "url": "https://linkedin.com/in/mujay",
+      "label": "LinkedIn"
+    },
+    {
+      "platform": "twitter",
+      "url": "https://x.com/mujay",
+      "label": "X / Twitter"
+    }
+  ]
+}

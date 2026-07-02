@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "title": "Abangantech.com",
+    "description": "Platform belajar pemrograman dengan modul interaktif, kuis, dan diskusi komunitas.",
+    "thumbnail": "/projects/abangantech.jpg",
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Prisma",
+      "PostgreSQL",
+      "Tailwind CSS"
+    ],
+    "demoUrl": "https://abangantech.com",
+    "repoUrl": null
+  },
+  {
+    "id": "2",
+    "title": "Portfolio AI Chat",
+    "description": "Personal portfolio website dengan AI chatbot yang bisa menjawab pertanyaan tentang saya.",
+    "thumbnail": "/projects/portfolio.jpg",
+    "techStack": ["Next.js", "TypeScript", "Tailwind CSS", "kie.ai"],
+    "demoUrl": "https://muji.alunika.id",
+    "repoUrl": null
+  },
+  {
+    "id": "3",
+    "title": "Content Automation",
+    "description": "Tools untuk automasi pembuatan konten sosial media menggunakan AI.",
+    "thumbnail": "/projects/automation.jpg",
+    "techStack": ["Python", "OpenAI", "FastAPI"],
+    "demoUrl": null,
+    "repoUrl": "https://github.com/mujay/content-automation"
+  }
+]

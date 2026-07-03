@@ -22,10 +22,10 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
   ),
   title: {
-    template: "%s — Muji Alunika",
-    default: "Muji Alunika",
+    template: "%s — Muji Burrohman",
+    default: "Muji Burrohman — Fullstack Developer",
   },
-  description: "Muji Alunika",
+  description: "Muji Burrohman — Fullstack Developer",
 };
 
 export default function RootLayout({

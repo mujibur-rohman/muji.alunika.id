@@ -55,6 +55,54 @@ model Project {
   @@map("projects")
 }
 
+model Profile {
+  id             String   @id @default(cuid())
+  name           String
+  title          String
+  bio            String
+  avatar         String   @default("/avatar.jpg")
+  location       String?
+  email          String?
+  githubUsername String?  @map("github_username")
+  aiContext      String   @default("") @map("ai_context")
+  cvUrl          String?  @map("cv_url")
+  cvKey          String?  @map("cv_key")
+  socials        Json     @default("[]")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("profile")
+}
+
+model Experience {
+  id             String    @id @default(cuid())
+  role           String
+  company        String
+  companyUrl     String?   @map("company_url")
+  location       String?
+  employmentType String?   @map("employment_type")
+  description    String    @default("")
+  techStack      String[]  @map("tech_stack")
+  startDate      DateTime  @map("start_date")
+  endDate        DateTime? @map("end_date")
+  current        Boolean   @default(false)
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@map("experiences")
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String
+  category  String   @default("Other")
+  level     Int?
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("skills")
+}
+
 model ProjectImage {
   id        String   @id @default(cuid())
   projectId String   @map("project_id")

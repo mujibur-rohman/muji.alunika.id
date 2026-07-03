@@ -18,20 +18,19 @@ interface GitHubEvent {
   action?: string;
 }
 
-const GITHUB_USERNAME = "mujibur-rohman"; // Change this to your GitHub username
-
-export function GithubActivity() {
+export function GithubActivity({ username }: { username: string | null }) {
   const [stats, setStats] = useState<GitHubStats | null>(null);
   const [events, setEvents] = useState<GitHubEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(username));
 
   useEffect(() => {
+    if (!username) return;
     async function fetchGitHub() {
       try {
         const [userRes, eventsRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
+          fetch(`https://api.github.com/users/${username}`),
           fetch(
-            `https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=10`,
+            `https://api.github.com/users/${username}/events/public?per_page=10`,
           ),
         ]);
 
@@ -74,7 +73,15 @@ export function GithubActivity() {
     }
 
     fetchGitHub();
-  }, []);
+  }, [username]);
+
+  if (!username) {
+    return (
+      <p className="py-12 text-center text-sm text-[var(--muted-foreground)]">
+        No GitHub username configured yet.
+      </p>
+    );
+  }
 
   if (loading) {
     return (
@@ -120,7 +127,7 @@ export function GithubActivity() {
         <div className="p-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`https://ghchart.rshah.org/${GITHUB_USERNAME}`}
+            src={`https://ghchart.rshah.org/${username}`}
             alt="GitHub Contribution Graph"
             className="w-full dark:invert dark:hue-rotate-180"
           />

@@ -15,15 +15,15 @@ interface Message {
 interface ChatPanelProps {
   open: boolean;
   onClose: () => void;
+  name?: string;
 }
 
-export function ChatPanel({ open, onClose }: ChatPanelProps) {
+export function ChatPanel({ open, onClose, name = "me" }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "assistant",
-      content:
-        "Halo! 👋 Saya AI assistant-nya Muji. Tanya apa aja tentang skills, pengalaman, atau project yang pernah dikerjain.",
+      content: `Halo! 👋 Saya AI assistant-nya ${name}. Tanya apa aja tentang skills, pengalaman, atau project yang pernah dikerjain.`,
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -41,69 +41,82 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
       role: "user",
       content,
     };
+    const assistantId = `${Date.now()}-a`;
+    const history = [...messages, userMessage];
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages([...history, { id: assistantId, role: "assistant", content: "" }]);
     setLoading(true);
+
+    const updateAssistant = (updater: (prev: string) => string) =>
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === assistantId ? { ...m, content: updater(m.content) } : m,
+        ),
+      );
 
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [...messages, userMessage].map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: history.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to get response");
+      if (!res.ok || !res.body) throw new Error("Failed to get response");
 
-      const data = await res.json();
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: data.message,
-        },
-      ]);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        if (chunk) updateAssistant((prev) => prev + chunk);
+      }
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: "Maaf, terjadi kesalahan. Coba lagi nanti ya.",
-        },
-      ]);
+      updateAssistant(() => "Maaf, terjadi kesalahan. Coba lagi nanti ya.");
     } finally {
       setLoading(false);
     }
   };
 
+  const lastMessage = messages[messages.length - 1];
+  const showTyping =
+    loading && lastMessage?.role === "assistant" && lastMessage.content === "";
+  const visibleMessages = messages.filter(
+    (m) => m.content.length > 0 || m.role === "user",
+  );
+
+  const thread = (
+    <>
+      {visibleMessages.map((msg) => (
+        <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
+      ))}
+      {showTyping && (
+        <div className="flex justify-start">
+          <div className="flex gap-1 rounded-lg bg-[var(--muted)] px-3 py-2.5">
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--muted-foreground)] [animation-delay:-0.3s]" />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--muted-foreground)] [animation-delay:-0.15s]" />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--muted-foreground)]" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex h-full w-[400px] shrink-0 flex-col border-l bg-[var(--background)]">
+      <aside className="hidden h-full w-[400px] shrink-0 flex-col border-l bg-[var(--background)] md:flex">
         <div className="flex items-center justify-between border-b px-4 py-3">
           <div className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5" />
             <span className="text-sm font-semibold">Ask about me</span>
           </div>
         </div>
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.map((msg) => (
-            <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
-          ))}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="rounded-lg bg-[var(--muted)] px-3 py-2 text-sm text-[var(--muted-foreground)]">
-                Typing...
-              </div>
-            </div>
-          )}
+        <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
+          {thread}
         </div>
         <ChatInput onSend={handleSend} disabled={loading} />
       </aside>
@@ -111,7 +124,7 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
       {/* Mobile drawer */}
       <div
         className={cn(
-          "fixed inset-0 z-50 md:hidden transition-opacity",
+          "fixed inset-0 z-50 transition-opacity md:hidden",
           open
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
@@ -137,18 +150,7 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
               <X className="h-4 w-4" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg) => (
-              <ChatMessage key={msg.id} role={msg.role} content={msg.content} />
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="rounded-lg bg-[var(--muted)] px-3 py-2 text-sm text-[var(--muted-foreground)]">
-                  Typing...
-                </div>
-              </div>
-            )}
-          </div>
+          <div className="flex-1 space-y-3 overflow-y-auto p-4">{thread}</div>
           <ChatInput onSend={handleSend} disabled={loading} />
         </div>
       </div>

@@ -84,3 +84,38 @@
     @apply bg-[var(--background)] text-[var(--foreground)];
   }
 }
+
+@layer utilities {
+  /* Subtle dotted grid, faded from the top so it never competes with content. */
+  .portfolio-bg {
+    background-image: radial-gradient(
+      color-mix(in oklch, var(--foreground) 11%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+    -webkit-mask-image: radial-gradient(
+      70% 55% at 50% 0%,
+      #000 0%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(70% 55% at 50% 0%, #000 0%, transparent 100%);
+  }
+
+  /* Soft monochrome glow that sits behind the profile header. */
+  .portfolio-glow {
+    background: radial-gradient(
+      50% 40% at 50% 0%,
+      color-mix(in oklch, var(--foreground) 7%, transparent),
+      transparent 70%
+    );
+  }
+
+  /* Dotted texture for the header banner. */
+  .banner-dots {
+    background-image: radial-gradient(
+      color-mix(in oklch, var(--foreground) 14%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 16px 16px;
+  }
+}

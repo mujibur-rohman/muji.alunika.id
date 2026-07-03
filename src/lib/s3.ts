@@ -14,6 +14,9 @@ const s3 = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
+  // Keep checksum params out of presigned URLs so browser PUT uploads don't fail
+  // a checksum mismatch (SDK v3 signs a CRC32 of an empty body at presign time).
+  requestChecksumCalculation: "WHEN_REQUIRED",
 });
 
 export async function getUploadPresignedUrl(key: string, contentType: string) {

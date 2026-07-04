@@ -96,6 +96,15 @@ export function ProfileHeader({
             );
           })}
 
+          {/* Email (mailto) */}
+          <a
+            href="mailto:muji.official06@gmail.com"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted-foreground)] transition-all hover:-translate-y-0.5 hover:border-[var(--foreground)]/30 hover:text-[var(--foreground)] hover:shadow-sm"
+            aria-label="Email"
+          >
+            <EnvelopeSimple className="h-[18px] w-[18px]" />
+          </a>
+
           <a
             href="/mujiburrohman-cv.pdf"
             target="_blank"

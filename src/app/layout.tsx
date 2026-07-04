@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   ),
   title: {
     template: "%s — Muji Burrohman",
-    default: "Muji Burrohman — Fullstack Developer",
+    default: "Muji Burrohman - Software Engineer",
   },
-  description: "Muji Burrohman — Fullstack Developer",
+  description: "Muji Burrohman - Software Engineer",
 };
 
 export default function RootLayout({

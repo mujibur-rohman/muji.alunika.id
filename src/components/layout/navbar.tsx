@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
+import { Logo } from "./logo";
 import { MessageCircle } from "lucide-react";
 
 interface NavbarProps {
@@ -13,9 +15,9 @@ export function Navbar({ onChatToggle, chatOpen, title = "muji.alunika" }: Navba
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-[var(--background)]/80 backdrop-blur-sm">
       <div className="flex h-14 items-center justify-between px-4 md:px-6">
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold">{title}</span>
-        </div>
+        <Link href="/" className="transition-opacity hover:opacity-80">
+          <Logo name={title} />
+        </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <button

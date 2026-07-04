@@ -4,10 +4,8 @@ export interface ProfileView {
   name: string;
   title: string;
   bio: string;
-  avatar: string;
   location: string | null;
   email: string | null;
-  cvUrl: string | null;
   githubUsername: string | null;
   socials: Social[];
 }

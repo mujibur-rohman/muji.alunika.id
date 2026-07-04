@@ -103,6 +103,18 @@ model Skill {
   @@map("skills")
 }
 
+model Visit {
+  id        String   @id @default(cuid())
+  visitorId String   @map("visitor_id")
+  path      String
+  referrer  String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([visitorId])
+  @@index([createdAt])
+  @@map("visits")
+}
+
 model ProjectImage {
   id        String   @id @default(cuid())
   projectId String   @map("project_id")

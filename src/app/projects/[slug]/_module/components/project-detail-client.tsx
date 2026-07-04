@@ -115,7 +115,7 @@ export function ProjectDetailClient({ project }: { project: Project }) {
                 className="inline-flex items-center gap-2 rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] transition-colors hover:bg-[var(--primary)]/90"
               >
                 <ArrowSquareOut className="h-4 w-4" />
-                Live Demo
+                Detail App
               </a>
             )}
             {project.repoUrl && (

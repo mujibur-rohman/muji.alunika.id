@@ -37,17 +37,15 @@ export function ProfileHeader({
       </div>
 
       <div className="-mt-12 flex flex-col items-center text-center">
-        {/* Avatar */}
+        {/* Avatar (static asset from /public) */}
         <div className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-[var(--background)] bg-[var(--muted)] shadow-lg ring-1 ring-[var(--border)]">
-          {profile.avatar && (
-            <Image
-              src={profile.avatar}
-              alt={profile.name}
-              fill
-              className="object-cover"
-              priority
-            />
-          )}
+          <Image
+            src="/avatar.png"
+            alt={profile.name}
+            fill
+            className="object-cover object-top"
+            priority
+          />
         </div>
 
         <div className="mt-3 space-y-1">
@@ -98,18 +96,16 @@ export function ProfileHeader({
             );
           })}
 
-          {profile.cvUrl && (
-            <a
-              href={profile.cvUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              className="ml-1 inline-flex h-9 items-center gap-2 rounded-lg bg-[var(--primary)] px-4 text-sm font-medium text-[var(--primary-foreground)] shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <Download className="h-4 w-4" />
-              Download CV
-            </a>
-          )}
+          <a
+            href="/mujiburrohman-cv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            className="ml-1 inline-flex h-9 items-center gap-2 rounded-lg bg-[var(--primary)] px-4 text-sm font-medium text-[var(--primary-foreground)] shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <Download className="h-4 w-4" />
+            Download CV
+          </a>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ProjectCard } from "./project-card";
+import { startNavProgress } from "@/components/layout/nav-progress";
 import type { ProjectView } from "./types";
 
 export function ProjectGrid({ projects }: { projects: ProjectView[] }) {
@@ -22,7 +23,10 @@ export function ProjectGrid({ projects }: { projects: ProjectView[] }) {
           key={project.id}
           title={project.title}
           thumbnail={project.thumbnail}
-          onClick={() => router.push(`/projects/${project.slug}`)}
+          onClick={() => {
+            startNavProgress();
+            router.push(`/projects/${project.slug}`);
+          }}
         />
       ))}
     </div>

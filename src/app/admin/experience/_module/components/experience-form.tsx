@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { startNavProgress } from "@/components/layout/nav-progress";
 import {
   Field,
   TextInput,
@@ -88,6 +89,7 @@ export function ExperienceForm({ initialData }: { initialData?: ExperienceData }
       }
 
       toast.success(isEdit ? "Experience updated" : "Experience created");
+      startNavProgress();
       router.push("/admin/experience");
       router.refresh();
     } catch {

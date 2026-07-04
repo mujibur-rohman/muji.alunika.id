@@ -29,10 +29,8 @@ export default async function Home() {
     name: profile.name,
     title: profile.title,
     bio: profile.bio,
-    avatar: profile.avatar,
     location: profile.location,
     email: profile.email,
-    cvUrl: profile.cvUrl,
     githubUsername: profile.githubUsername,
     socials: getSocials(profile),
   };

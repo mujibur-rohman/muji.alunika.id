@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { startNavProgress } from "@/components/layout/nav-progress";
 import { Upload, X, Loader2 } from "lucide-react";
 
 interface ProjectImage {
@@ -107,6 +108,7 @@ export function ProjectForm({ initialData }: ProjectFormProps) {
 
       if (!isEdit) {
         // Redirect to edit page to add images
+        startNavProgress();
         router.push(`/admin/projects/${data.id}`);
       } else {
         router.refresh();

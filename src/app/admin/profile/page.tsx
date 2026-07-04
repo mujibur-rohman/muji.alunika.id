@@ -10,13 +10,10 @@ export default async function AdminProfilePage() {
         name: profile.name,
         title: profile.title,
         bio: profile.bio,
-        avatar: profile.avatar,
         location: profile.location ?? "",
         email: profile.email ?? "",
         githubUsername: profile.githubUsername ?? "",
         aiContext: profile.aiContext,
-        cvUrl: profile.cvUrl,
-        cvKey: profile.cvKey,
         socials: getSocials(profile),
       }}
     />

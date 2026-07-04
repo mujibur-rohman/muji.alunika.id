@@ -66,7 +66,7 @@ export function ProjectDetailDialog({
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] hover:underline"
                 >
                   <ArrowSquareOut className="h-4 w-4" />
-                  Live Demo
+                  Detail AppLive Demo
                 </a>
               )}
               {project.repoUrl && (

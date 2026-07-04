@@ -133,46 +133,6 @@ export function GithubActivity({ username }: { username: string | null }) {
           />
         </div>
       </div>
-
-      {/* Recent Activity */}
-      <div className="overflow-hidden rounded-md border">
-        <div className="border-b px-4 py-2.5">
-          <h3 className="text-sm font-semibold">Recent Activity</h3>
-        </div>
-        <div className="divide-y">
-          {events.length === 0 ? (
-            <p className="px-4 py-6 text-center text-sm text-[var(--muted-foreground)]">
-              No recent activity
-            </p>
-          ) : (
-            events.map((event) => (
-              <div key={event.id} className="flex items-start gap-3 px-4 py-3">
-                <div className="mt-0.5 shrink-0 text-[var(--muted-foreground)]">
-                  {getEventIcon(event.type)}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm">
-                    <span className="font-medium">
-                      {formatEventType(event.type, event.action)}
-                    </span>{" "}
-                    <a
-                      href={`https://github.com/${event.repo}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:underline"
-                    >
-                      {event.repo.split("/")[1]}
-                    </a>
-                  </p>
-                  <p className="text-xs text-[var(--muted-foreground)]">
-                    {formatTimeAgo(event.createdAt)}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
     </div>
   );
 }

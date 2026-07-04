@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { startNavProgress } from "@/components/layout/nav-progress";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,6 +28,7 @@ export default function LoginPage() {
         return;
       }
 
+      startNavProgress();
       router.push("/admin/projects");
       router.refresh();
     } catch {

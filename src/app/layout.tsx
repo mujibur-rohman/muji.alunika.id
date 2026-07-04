@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
+import { NavProgressBar } from "@/components/layout/nav-progress";
+import { PageTracker } from "@/components/analytics/page-tracker";
 import { QueryProvider } from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import "./globals.css";
@@ -40,6 +42,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full">
+        <NavProgressBar />
+        <PageTracker />
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>

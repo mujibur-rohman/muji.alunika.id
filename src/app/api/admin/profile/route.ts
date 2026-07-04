@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { getProfile } from "@/lib/profile";
-import { deleteS3Object } from "@/lib/s3";
 
 // GET /api/admin/profile — current profile
 export async function GET() {
@@ -28,24 +27,12 @@ export async function PUT(request: NextRequest) {
     name,
     title,
     bio,
-    avatar,
     location,
     email,
     githubUsername,
     aiContext,
     socials,
-    cvUrl,
-    cvKey,
   } = body;
-
-  // If the CV is being replaced or removed, delete the previous S3 object.
-  if (cvKey !== undefined && current.cvKey && current.cvKey !== cvKey) {
-    try {
-      await deleteS3Object(current.cvKey);
-    } catch (e) {
-      console.error("Failed to delete old CV:", current.cvKey, e);
-    }
-  }
 
   const socialsClean = Array.isArray(socials)
     ? socials
@@ -63,7 +50,6 @@ export async function PUT(request: NextRequest) {
       ...(name !== undefined && { name }),
       ...(title !== undefined && { title }),
       ...(bio !== undefined && { bio }),
-      ...(avatar !== undefined && { avatar: avatar || "/avatar.jpg" }),
       ...(location !== undefined && { location: location || null }),
       ...(email !== undefined && { email: email || null }),
       ...(githubUsername !== undefined && {
@@ -71,8 +57,6 @@ export async function PUT(request: NextRequest) {
       }),
       ...(aiContext !== undefined && { aiContext: aiContext ?? "" }),
       ...(socialsClean !== undefined && { socials: socialsClean }),
-      ...(cvUrl !== undefined && { cvUrl: cvUrl || null }),
-      ...(cvKey !== undefined && { cvKey: cvKey || null }),
     },
   });
 

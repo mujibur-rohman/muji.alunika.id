@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Upload, Loader2, Plus, Trash2, FileText, X } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import type { Social } from "@/lib/profile";
 import {
@@ -18,13 +17,10 @@ interface ProfileData {
   name: string;
   title: string;
   bio: string;
-  avatar: string;
   location: string;
   email: string;
   githubUsername: string;
   aiContext: string;
-  cvUrl: string | null;
-  cvKey: string | null;
   socials: Social[];
 }
 
@@ -34,63 +30,10 @@ export function ProfileForm({ initialData }: { initialData: ProfileData }) {
   const router = useRouter();
   const [data, setData] = useState<ProfileData>(initialData);
   const [saving, setSaving] = useState(false);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [uploadingCv, setUploadingCv] = useState(false);
   const [error, setError] = useState("");
 
   const set = <K extends keyof ProfileData>(key: K, value: ProfileData[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
-
-  const uploadFile = async (type: "avatar" | "cv", file: File) => {
-    const res = await fetch("/api/admin/profile/upload", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type,
-        fileName: file.name,
-        contentType: file.type,
-      }),
-    });
-    if (!res.ok) throw new Error("Failed to get upload URL");
-    const { data: presign } = await res.json();
-
-    await fetch(presign.presignedUrl, {
-      method: "PUT",
-      body: file,
-      headers: { "Content-Type": file.type },
-    });
-    return presign as { url: string; key: string };
-  };
-
-  const handleAvatar = async (file: File) => {
-    setUploadingAvatar(true);
-    try {
-      const { url } = await uploadFile("avatar", file);
-      set("avatar", url);
-      toast.success("Avatar uploaded — don't forget to Save");
-    } catch {
-      toast.error("Avatar upload failed");
-    } finally {
-      setUploadingAvatar(false);
-    }
-  };
-
-  const handleCv = async (file: File) => {
-    if (file.type !== "application/pdf") {
-      toast.error("CV must be a PDF file");
-      return;
-    }
-    setUploadingCv(true);
-    try {
-      const { url, key } = await uploadFile("cv", file);
-      setData((prev) => ({ ...prev, cvUrl: url, cvKey: key }));
-      toast.success("CV uploaded — don't forget to Save");
-    } catch {
-      toast.error("CV upload failed");
-    } finally {
-      setUploadingCv(false);
-    }
-  };
 
   const addSocial = () =>
     set("socials", [...data.socials, { platform: "website", url: "", label: "Website" }]);
@@ -140,29 +83,9 @@ export function ProfileForm({ initialData }: { initialData: ProfileData }) {
 
       <ErrorBanner message={error} />
 
-      {/* Avatar */}
-      <div className="flex items-center gap-4">
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-[var(--border)] bg-[var(--muted)]">
-          {data.avatar && (
-            <Image src={data.avatar} alt="Avatar" fill className="object-cover" />
-          )}
-        </div>
-        <label className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm hover:bg-[var(--accent)]">
-          {uploadingAvatar ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Upload className="h-4 w-4" />
-          )}
-          Change avatar
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            disabled={uploadingAvatar}
-            onChange={(e) => e.target.files?.[0] && handleAvatar(e.target.files[0])}
-          />
-        </label>
-      </div>
+      <p className="rounded-md border border-dashed px-3 py-2 text-xs text-[var(--muted-foreground)]">
+        Avatar diambil dari <code className="font-mono">public/avatar.png</code> (statik). Ganti file itu di repo untuk mengubah foto.
+      </p>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Name *">
@@ -201,48 +124,9 @@ export function ProfileForm({ initialData }: { initialData: ProfileData }) {
         </Field>
       </div>
 
-      {/* CV */}
-      <Field label="CV (PDF)" hint="Visitors can download this from your profile header">
-        <div className="flex flex-wrap items-center gap-3">
-          {data.cvUrl ? (
-            <a
-              href={data.cvUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm hover:bg-[var(--accent)]"
-            >
-              <FileText className="h-4 w-4" /> View current CV
-            </a>
-          ) : (
-            <span className="text-sm text-[var(--muted-foreground)]">
-              No CV uploaded
-            </span>
-          )}
-          <label className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm hover:bg-[var(--accent)]">
-            {uploadingCv ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Upload className="h-4 w-4" />
-            )}
-            {data.cvUrl ? "Replace CV" : "Upload CV"}
-            <input
-              type="file"
-              accept="application/pdf"
-              className="hidden"
-              disabled={uploadingCv}
-              onChange={(e) => e.target.files?.[0] && handleCv(e.target.files[0])}
-            />
-          </label>
-          {data.cvUrl && (
-            <button
-              onClick={() => setData((p) => ({ ...p, cvUrl: null, cvKey: null }))}
-              className="inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
-            >
-              <X className="h-4 w-4" /> Remove
-            </button>
-          )}
-        </div>
-      </Field>
+      <p className="rounded-md border border-dashed px-3 py-2 text-xs text-[var(--muted-foreground)]">
+        CV diambil dari <code className="font-mono">public/mujiburrohman-cv.pdf</code> (statik). Ganti file itu di repo untuk memperbarui CV.
+      </p>
 
       {/* Socials */}
       <div className="space-y-3">

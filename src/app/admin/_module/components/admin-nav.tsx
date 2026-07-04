@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { FolderGit2, Briefcase, Sparkles, User } from "lucide-react";
+import { FolderGit2, Briefcase, Sparkles, User, BarChart3 } from "lucide-react";
 
 const links = [
   { href: "/admin/projects", label: "Projects", icon: FolderGit2 },
   { href: "/admin/experience", label: "Experience", icon: Briefcase },
   { href: "/admin/skills", label: "Skills", icon: Sparkles },
+  { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/profile", label: "Profile", icon: User },
 ];
 
